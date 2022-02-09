@@ -1,0 +1,25 @@
+general:
+  zk_connect: '<%= (!@zk_hosts.nil? and @zk_hosts!="") ?  @zk_hosts : "127.0.0.1:2181" %>'
+  topics:
+    - rb_loc
+    - rb_locne
+  httpThreadsNum: <%= ( [ ( !node["redborder"]["k2http"]["http_threads"].nil? and node["redborder"]["k2http"]["http_threads"].to_i>0 ) ? node["redborder"]["k2http"]["http_threads"] : 200*[ node["cpu"]["total"].to_i, 1 ].max, 2000].min ) %>
+  maxQueueSize: 1000
+  endpoint: '<%= (node["redborder"]["k2http"]["url"].nil? or node["redborder"]["k2http"]["url"].empty?) ? "http://127.0.0.1:7777" : node["redborder"]["k2http"]["url"] %>'
+  insecure: <%= (!node["redborder"]["k2http"]["url"].nil? and node["redborder"]["k2http"]["url"].start_with?"https://") ? "false" : "true" %>
+  filters_enable: true
+  filters_mode:
+    rb_loc:
+      mse10:
+        <% if !@mse_nodes.nil? and @mse_nodes.size > 0 %>
+        <% @mse_nodes.each do |n| %>
+        <% if !n["redborder"]["sensor_uuid"].nil? and n["redborder"]["sensor_uuid"]!="" and (n["redborder"]["send_http"] == "1" or n["redborder"]["send_http"] == true or n["redborder"]["send_http"] == 1) %>
+        '<%= n["redborder"]["sensor_uuid"] %>':
+          <% if !n["redborder"]["subscription_names"].nil? %>
+          <% n["redborder"]["subscription_names"].each do |sn| %>
+          - '<%= sn %>'
+  <% end %>
+  <% end %>
+  <% end %>
+  <% end %>
+  <% end %>
