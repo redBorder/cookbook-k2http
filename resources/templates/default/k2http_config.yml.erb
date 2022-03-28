@@ -1,25 +1,30 @@
-general:
-  zk_connect: '<%= (!@zk_hosts.nil? and @zk_hosts!="") ?  @zk_hosts : "127.0.0.1:2181" %>'
-  topics:
+backend:
+  workers: 20             # Number of workers
+  queue: 1000             # Max internal queue size
+  retries: -1             # Number of retries on fail (-1 not limited)
+  backoff: 3              # Time to wait between retries in seconds             
+  max_bytes: <%= (( !node["redborder"].nil? and !node["redborder"]["megabytes_limit"].nil? ) ? (node["redborder"]["megabytes_limit"].to_i * 1024 * 1024 * 1024 / (30.0 * 3600)) : 0 ).to_i %>      # Max bytes per second
+  showcounter: 60         # Time in secods to show message ratio
+
+kafka:
+  broker: "kafka.service:9092"  # kafka broker
+  consumergroup: "k2http"   # Consumer group ID   
+  begining: false           # Reset offset
+  topics:                   # Kafka topics to listen
+    - rb_nmsp
+    - rb_radius
+    - rb_flow
     - rb_loc
-    - rb_locne
-  httpThreadsNum: <%= ( [ ( !node["redborder"]["k2http"]["http_threads"].nil? and node["redborder"]["k2http"]["http_threads"].to_i>0 ) ? node["redborder"]["k2http"]["http_threads"] : 200*[ node["cpu"]["total"].to_i, 1 ].max, 2000].min ) %>
-  maxQueueSize: 1000
-  endpoint: '<%= (node["redborder"]["k2http"]["url"].nil? or node["redborder"]["k2http"]["url"].empty?) ? "http://127.0.0.1:7777" : node["redborder"]["k2http"]["url"] %>'
-  insecure: <%= (!node["redborder"]["k2http"]["url"].nil? and node["redborder"]["k2http"]["url"].start_with?"https://") ? "false" : "true" %>
-  filters_enable: true
-  filters_mode:
-    rb_loc:
-      mse10:
-        <% if !@mse_nodes.nil? and @mse_nodes.size > 0 %>
-        <% @mse_nodes.each do |n| %>
-        <% if !n["redborder"]["sensor_uuid"].nil? and n["redborder"]["sensor_uuid"]!="" and (n["redborder"]["send_http"] == "1" or n["redborder"]["send_http"] == true or n["redborder"]["send_http"] == 1) %>
-        '<%= n["redborder"]["sensor_uuid"] %>':
-          <% if !n["redborder"]["subscription_names"].nil? %>
-          <% n["redborder"]["subscription_names"].each do |sn| %>
-          - '<%= sn %>'
-  <% end %>
-  <% end %>
-  <% end %>
-  <% end %>
-  <% end %>
+    - rb_monitor
+    - rb_state
+    - rb_social
+    - rb_vault
+    - sflow
+    - rb_scanner
+http:
+  url: "https://data.redborder.cluster/rbdata/<%= node["redborder"]["sensor_uuid"] %>" # URL to the server
+  insecure: <%= node["redborder"]["proxy"]["insecure"].nil? ? "false" : ((node["redborder"]["proxy"]["insecure"] == true or node["redborder"]["proxy"]["insecure"] == "true" or node["redborder"]["proxy"]["insecure"] == "1" ) ? "true" : "false") %>   # Skip SSSL verification
+  batchsize: 1000                 # Max messages per batch
+  batchtimeout: 100               # Max time to wait for send a batch
+  deflate: true                   # Use deflate
+  endpoint: topic                 # String to add to the URL as suffix

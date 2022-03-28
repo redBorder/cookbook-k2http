@@ -3,7 +3,7 @@
 # Provider:: config
 #
 
-include k2http::Helper
+include K2http::Helper
 
 action :add do
   begin
@@ -21,11 +21,17 @@ action :add do
       system true
     end
 
-    directory config_dir do #/etc/k2http
-    owner "root"
-    group "root"
-    mode '755'
-    action :create
+    directory logdir do
+      owner user
+      group group
+      mode 0770
+      action :create
+    end
+
+    directory "/etc/k2http" do
+      owner user
+      group group
+      mode 0755
     end
 
     # generate k2http config
@@ -35,7 +41,6 @@ action :add do
       group user
       mode 0644
       cookbook "k2http"
-      variables( :zk_hosts => zk_hosts, :mse_nodes => mse_nodes)
       notifies :restart, "service[k2http]"
     end
 
