@@ -8,8 +8,6 @@ include K2http::Helper
 action :add do
   begin
     user = new_resource.user
-    zk_hosts = new_resource.zk_hosts
-    mse_nodes = new_resource.mse_nodes
 
     yum_package "k2http" do
       action :upgrade
