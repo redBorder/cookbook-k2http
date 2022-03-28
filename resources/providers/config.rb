@@ -8,6 +8,7 @@ include K2http::Helper
 action :add do
   begin
     user = new_resource.user
+    logdir = new_resource.logdir
 
     yum_package "k2http" do
       action :upgrade
@@ -33,7 +34,7 @@ action :add do
     end
 
     # generate k2http config
-    template "/etc/k2http/k2http.conf" do
+    template "/etc/k2http/config.yml" do
       source "k2http_config.yml.erb"
       owner user
       group user
@@ -73,40 +74,40 @@ action :remove do
 end
 
 action :register do #Usually used to register in consul
-begin
-  if !node["k2http"]["registered"]
-    query = {}
-    query["ID"] = "k2http-#{node["hostname"]}"
-    query["Name"] = "k2http"
-    query["Address"] = "#{node["ipaddress"]}"
-    query["Port"] = 443
-    json_query = Chef::JSONCompat.to_json(query)
+  begin
+    if !node["k2http"]["registered"]
+      query = {}
+      query["ID"] = "k2http-#{node["hostname"]}"
+      query["Name"] = "k2http"
+      query["Address"] = "#{node["ipaddress"]}"
+      query["Port"] = 443
+      json_query = Chef::JSONCompat.to_json(query)
 
-    execute 'Register service in consul' do
-      command "curl -X PUT http://localhost:8500/v1/agent/service/register -d '#{json_query}' &>/dev/null"
-      action :nothing
-    end.run_action(:run)
+      execute 'Register service in consul' do
+        command "curl -X PUT http://localhost:8500/v1/agent/service/register -d '#{json_query}' &>/dev/null"
+        action :nothing
+      end.run_action(:run)
 
-    node.set["rb-social"]["registered"] = true
+      node.set["rb-social"]["registered"] = true
+    end
+    Chef::Log.info("k2http service has been registered in consul")
+  rescue => e
+    Chef::Log.error(e.message)
   end
-  Chef::Log.info("k2http service has been registered in consul")
-rescue => e
-  Chef::Log.error(e.message)
-end
 end
 
 action :deregister do #Usually used to deregister from consul
-begin
-  if node["k2http"]["registered"]
-    execute 'Deregister service in consul' do
-      command "curl -X PUT http://localhost:8500/v1/agent/service/deregister/k2http-#{node["hostname"]} &>/dev/null"
-      action :nothing
-    end.run_action(:run)
+  begin
+    if node["k2http"]["registered"]
+      execute 'Deregister service in consul' do
+        command "curl -X PUT http://localhost:8500/v1/agent/service/deregister/k2http-#{node["hostname"]} &>/dev/null"
+        action :nothing
+      end.run_action(:run)
 
-    node.set["k2http"]["registered"] = false
+      node.set["k2http"]["registered"] = false
+    end
+    Chef::Log.info("k2http service has been deregistered from consul")
+  rescue => e
+    Chef::Log.error(e.message)
   end
-  Chef::Log.info("k2http service has been deregistered from consul")
-rescue => e
-  Chef::Log.error(e.message)
-end
 end
