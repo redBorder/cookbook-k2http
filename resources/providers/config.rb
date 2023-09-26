@@ -88,7 +88,6 @@ action :register do #Usually used to register in consul
         action :nothing
       end.run_action(:run)
 
-      node.set["rb-social"]["registered"] = true
     end
     Chef::Log.info("k2http service has been registered in consul")
   rescue => e
