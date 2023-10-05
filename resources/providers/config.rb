@@ -10,7 +10,7 @@ action :add do
     user = new_resource.user
     logdir = new_resource.logdir
 
-    yum_package "k2http" do
+    dnf_package "k2http" do
       action :upgrade
       flush_cache [:before]
     end
