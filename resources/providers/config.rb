@@ -103,7 +103,7 @@ action :deregister do #Usually used to deregister from consul
         action :nothing
       end.run_action(:run)
 
-      node.set["k2http"]["registered"] = false
+      node.default["k2http"]["registered"] = false
     end
     Chef::Log.info("k2http service has been deregistered from consul")
   rescue => e
