@@ -89,8 +89,9 @@ action :register do #Usually used to register in consul
         action :nothing
       end.run_action(:run)
 
+      node.normal["k2http"]["registered"] = true
+      Chef::Log.info("k2http service has been registered in consul")
     end
-    Chef::Log.info("k2http service has been registered in consul")
   rescue => e
     Chef::Log.error(e.message)
   end
@@ -104,7 +105,7 @@ action :deregister do #Usually used to deregister from consul
         action :nothing
       end.run_action(:run)
 
-      node.default["k2http"]["registered"] = false
+      node.normal["k2http"]["registered"] = false
     end
     Chef::Log.info("k2http service has been deregistered from consul")
   rescue => e
