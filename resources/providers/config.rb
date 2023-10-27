@@ -10,14 +10,15 @@ action :add do
     user = new_resource.user
     logdir = new_resource.logdir
 
-    yum_package "k2http" do
+    dnf_package "k2http" do
       action :upgrade
       flush_cache [:before]
     end
 
-    user user do
-      action :create
-      system true
+    execute "create_user" do
+      command "/usr/sbin/useradd -r #{user}"
+      ignore_failure true
+      not_if "getent passwd #{user}"
     end
 
     directory logdir do
@@ -88,9 +89,9 @@ action :register do #Usually used to register in consul
         action :nothing
       end.run_action(:run)
 
-      node.set["rb-social"]["registered"] = true
+      node.normal["k2http"]["registered"] = true
+      Chef::Log.info("k2http service has been registered in consul")
     end
-    Chef::Log.info("k2http service has been registered in consul")
   rescue => e
     Chef::Log.error(e.message)
   end
@@ -104,7 +105,7 @@ action :deregister do #Usually used to deregister from consul
         action :nothing
       end.run_action(:run)
 
-      node.set["k2http"]["registered"] = false
+      node.normal["k2http"]["registered"] = false
     end
     Chef::Log.info("k2http service has been deregistered from consul")
   rescue => e
