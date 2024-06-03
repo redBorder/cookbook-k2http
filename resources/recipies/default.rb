@@ -1,12 +1,9 @@
-#
-# Cookbook Name:: k2http
+# Cookbook:: k2http
 # Recipe:: default
-#
-# redborder
-#
-#
+# Copyright:: 2024, redborder
+# License:: Affero General Public License, Version 3
 
-k2http_config "config" do
-  name node["hostname"]
+k2http_config 'config' do
+  name node['hostname']
   action :add
 end
