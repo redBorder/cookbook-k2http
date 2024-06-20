@@ -1,6 +1,11 @@
 cookbook-k2http CHANGELOG
 ===============
 
+## 0.0.4
+
+  - David Vanhoucke
+    - [b75c2f1] adapt the timeout to send in batch
+
 ## 0.0.3
 
   - Miguel Negron
