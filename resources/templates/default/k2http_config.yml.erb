@@ -23,9 +23,9 @@ kafka:
     - rb_scanner
 
 batch:
-  workers: 20                     # Number of workers
+  workers: 5                      # Number of workers
   size: 1000                      # Max messages per batch
-  timeoutMillis: 100              # Max time to wait for send a batch
+  timeoutMillis: 15000            # Max time to wait for send a batch
   deflate: true                   # Use deflate to compress batches
   
 http:
