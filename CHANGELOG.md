@@ -1,6 +1,16 @@
 cookbook-k2http CHANGELOG
 ===============
 
+## 0.1.0
+
+  - Miguel Negrón
+    - [afad954] Merge pull request #7 from redBorder/bugfix/#13550_restrain_user_permissions
+  - Miguel Negron
+    - [fa4b0fc] Adapt config.rb
+  - Luis Blanco
+    - [e10f7c4] Merge branch 'master' into bugfix/#13550_restrain_user_permissions
+    - [68bc1e7] restrain user permission
+
 ## 0.0.4
 
   - David Vanhoucke
