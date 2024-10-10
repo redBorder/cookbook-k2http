@@ -1,11 +1,16 @@
 cookbook-k2http CHANGELOG
 ===============
 
+## 0.1.1
+
+  - Miguel Negrón
+    - [ed8b840] Add pre and postun to clean the cookbook
+
 ## 0.1.0
 
   - Miguel Negrón
     - [afad954] Merge pull request #7 from redBorder/bugfix/#13550_restrain_user_permissions
-  - Miguel Negron
+  - Miguel Negrón
     - [fa4b0fc] Adapt config.rb
   - Luis Blanco
     - [e10f7c4] Merge branch 'master' into bugfix/#13550_restrain_user_permissions
@@ -18,7 +23,7 @@ cookbook-k2http CHANGELOG
 
 ## 0.0.3
 
-  - Miguel Negron
+  - Miguel Negrón
     - [f543b2e] lint resources
     - [bea1ef7] lint recipies
     - [33aefe9] lint providers
