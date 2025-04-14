@@ -1,6 +1,11 @@
 cookbook-k2http CHANGELOG
 ===============
 
+## 0.2.0
+
+  - nilsver
+    - [b042c4a] fix http2k link
+
 ## 0.1.1
 
   - Miguel Negrón
