@@ -29,6 +29,6 @@ batch:
   deflate: true                   # Use deflate to compress batches
   
 http:
-  url: "https://http2k.service/rbdata/<%= node["redborder"]["sensor_uuid"] %>" # URL to the server
+  url: "https://http2k.<%= node['redborder']['cdomain']%>/rbdata/<%= node["redborder"]["sensor_uuid"] %>" # URL to the server
   insecure: <%= node["redborder"]["proxy"]["insecure"].nil? ? "false" : ((node["redborder"]["proxy"]["insecure"] == true or node["redborder"]["proxy"]["insecure"] == "true" or node["redborder"]["proxy"]["insecure"] == "1" ) ? "true" : "false") %>   # Skip SSSL verification
   endpoint: topic                 # String to add to the URL as suffix

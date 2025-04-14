@@ -1,6 +1,11 @@
 cookbook-k2http CHANGELOG
 ===============
 
+## 0.2.0
+
+  - Rafael Gomez
+    - [345b873] Update HTTP URL in k2http_config to use dynamic domain from node attributes
+
 ## 0.1.1
 
   - Miguel Negrón
