@@ -1,6 +1,11 @@
 cookbook-k2http CHANGELOG
 ===============
 
+## 0.2.1
+
+  - nilsver
+    - [b02b6fa] remove flush cache
+
 ## 0.2.0
 
   - Rafael Gomez
