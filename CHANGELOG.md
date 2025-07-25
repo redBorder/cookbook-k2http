@@ -1,6 +1,11 @@
 cookbook-k2http CHANGELOG
 ===============
 
+## 0.2.2
+
+  - jnavarrorb
+    - [a93ca23] Remove executable permissions on non-executable files
+
 ## 0.2.1
 
   - nilsver
