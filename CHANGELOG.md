@@ -1,6 +1,11 @@
 cookbook-k2http CHANGELOG
 ===============
 
+## 0.3.0
+
+  - Jose Jimenez
+    - [81d3b65] feat: add support for rb_trap kafka topic
+
 ## 0.2.2
 
   - jnavarrorb
