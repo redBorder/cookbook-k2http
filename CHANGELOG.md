@@ -1,6 +1,17 @@
 cookbook-k2http CHANGELOG
 ===============
 
+## 0.3.1
+
+  - manegron
+    - [0c897f6] Upload cookbook only if opscode-erchef is active
+  - Pablo Pérez
+    - [92b6d14] Release 0.3.0
+  - Jose Jimenez
+    - [51027e3] Merge pull request #19 from redBorder/improvement/#23621_update_net-snmp_fork_and_reinstale_kafka_trap_output
+  - José Jiménez
+    - [81d3b65] feat: add support for rb_trap kafka topic
+
 ## 0.3.0
 
   - Jose Jimenez
