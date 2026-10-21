@@ -1,0 +1,18 @@
+[Unit]
+Description=K2HTTP daemon (kafka2x)
+After=network.target kafka.service
+
+[Service]
+Type=simple
+User=<%= @user %>
+Group=<%= @user %>
+RuntimeDirectory=k2http
+RuntimeDirectoryMode=0755
+ExecStart=/usr/bin/kafka2x /etc/k2http/config.json
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=5s
+TimeoutStopSec=10s
+
+[Install]
+WantedBy=multi-user.target
