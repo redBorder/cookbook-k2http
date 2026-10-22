@@ -8,8 +8,18 @@ action :add do
     user = new_resource.user
     logdir = new_resource.logdir
 
-    dnf_package 'k2http' do
+    # k2http now runs the kafka2x binary, /etc/systemd/system/k2http.service overrides the old package unit
+    dnf_package 'kafka2x' do
       action :upgrade
+      notifies :restart, 'service[k2http]', :delayed
+    end
+
+    # kafka2x ships its own unit, it would consume the same group as k2http
+    service 'kafka2x' do
+      service_name 'kafka2x'
+      ignore_failure true
+      supports status: true, enable: true
+      action [:stop, :disable]
     end
 
     execute 'create_user' do
@@ -32,12 +42,32 @@ action :add do
     end
 
     # generate k2http config
-    template '/etc/k2http/config.yml' do
-      source 'k2http_config.yml.erb'
+    template '/etc/k2http/config.json' do
+      source 'k2http_config.json.erb'
       owner user
       group user
       mode '0644'
       cookbook 'k2http'
+      notifies :restart, 'service[k2http]'
+    end
+
+    file '/etc/k2http/config.yml' do
+      action :delete
+    end
+
+    execute 'k2http_daemon_reload' do
+      command 'systemctl daemon-reload'
+      action :nothing
+    end
+
+    template '/etc/systemd/system/k2http.service' do
+      source 'k2http.service.erb'
+      owner 'root'
+      group 'root'
+      mode '0644'
+      cookbook 'k2http'
+      variables(user: user)
+      notifies :run, 'execute[k2http_daemon_reload]', :immediately
       notifies :restart, 'service[k2http]'
     end
 
