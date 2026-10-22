@@ -11,6 +11,7 @@ action :add do
     # k2http now runs the kafka2x binary, /etc/systemd/system/k2http.service overrides the old package unit
     dnf_package 'kafka2x' do
       action :upgrade
+      notifies :restart, 'service[k2http]', :delayed
     end
 
     # kafka2x ships its own unit, it would consume the same group as k2http
