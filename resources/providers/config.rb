@@ -8,7 +8,7 @@ action :add do
     user = new_resource.user
     logdir = new_resource.logdir
 
-    dnf_package 'k2http' do
+    dnf_package 'redborder-k2http' do
       action :upgrade
     end
 
