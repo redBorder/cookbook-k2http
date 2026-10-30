@@ -8,6 +8,11 @@ action :add do
     user = new_resource.user
     logdir = new_resource.logdir
 
+    # the old k2http package ships the same unit file as redborder-k2http
+    dnf_package 'k2http' do
+      action :remove
+    end
+
     dnf_package 'redborder-k2http' do
       action :upgrade
     end
