@@ -12,6 +12,12 @@ action :add do
       action :upgrade
     end
 
+    # restart k2http when a new kafka2x is installed
+    dnf_package 'kafka2x' do
+      action :upgrade
+      notifies :restart, 'service[k2http]', :delayed
+    end
+
     execute 'create_user' do
       command "/usr/sbin/useradd -r #{user} -s /sbin/nologin"
       ignore_failure true
