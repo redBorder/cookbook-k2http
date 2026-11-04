@@ -1,6 +1,11 @@
 cookbook-k2http CHANGELOG
 ===============
 
+## 0.4.0
+
+  - Juan Soto
+    - [67ce5fd] Improvement/#26935 use kafka2x in the redborder-k2http service (#21)
+
 ## 0.3.1
 
   - manegron

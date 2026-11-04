@@ -1,0 +1,36 @@
+{
+  "kafka": {
+    "brokers": ["kafka.service:9092"],
+    "group_id": "k2http",
+    "topics": [
+      "rb_nmsp",
+      "rb_radius",
+      "rb_flow",
+      "rb_trap",
+      "rb_loc",
+      "rb_monitor",
+      "rb_state",
+      "rb_vault",
+      "sflow",
+      "rb_scanner"
+    ]
+  },
+  "pipeline": {
+    "workers": 5,
+    "batch_size": 1000,
+    "timeout_ms": 15000,
+    "retries": -1,
+    "backoff_sec": 3
+  },
+  "http": {
+    "url": "https://http2k.<%= node['redborder']['cdomain'] %>/rbdata/<%= node['redborder']['sensor_uuid'] %>",
+    "method": "POST",
+    "framing": "concatenated",
+    "compression": "zlib",
+    "insecure": <%= node['redborder']['proxy']['insecure'].nil? ? 'false' : ((node['redborder']['proxy']['insecure'] == true || node['redborder']['proxy']['insecure'] == 'true' || node['redborder']['proxy']['insecure'] == '1') ? 'true' : 'false') %>,
+    "timeout": "15s"
+  },
+  "stats_port": 7989,
+  "stats_bind": "127.0.0.1",
+  "stats_socket": "/run/k2http/k2http.sock"
+}
