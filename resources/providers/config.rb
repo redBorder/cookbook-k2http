@@ -8,8 +8,19 @@ action :add do
     user = new_resource.user
     logdir = new_resource.logdir
 
+    # the old k2http package ships the same unit file as redborder-k2http
     dnf_package 'k2http' do
+      action :remove
+    end
+
+    dnf_package 'redborder-k2http' do
       action :upgrade
+    end
+
+    # restart k2http when a new kafka2x is installed
+    dnf_package 'kafka2x' do
+      action :upgrade
+      notifies :restart, 'service[k2http]', :delayed
     end
 
     execute 'create_user' do
@@ -32,13 +43,17 @@ action :add do
     end
 
     # generate k2http config
-    template '/etc/k2http/config.yml' do
-      source 'k2http_config.yml.erb'
+    template '/etc/k2http/config.json' do
+      source 'k2http_config.json.erb'
       owner user
       group user
       mode '0644'
       cookbook 'k2http'
       notifies :restart, 'service[k2http]'
+    end
+
+    file '/etc/k2http/config.yml' do
+      action :delete
     end
 
     service 'k2http' do
